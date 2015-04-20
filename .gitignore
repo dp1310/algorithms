@@ -1,0 +1,92 @@
+package code.algo.graph.problems;
+
+import java.util.Stack;
+
+public class GraphMatrix {
+
+	int[][]graph;
+	boolean[] visited;
+	
+	public GraphMatrix(int n){
+		
+		graph = new int[n][n];
+		visited = new boolean[n];
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				graph[i][j]=0;
+			}
+		}
+	}
+	
+	public void addEdge(int s,int d){
+		
+		if(graph!=null)
+			try{
+			graph[s][d] = 1;
+			}catch(Exception ex){
+				System.out.println("Invalid Argument Exception "+ex);
+			}
+	}
+	
+	
+	public int[] getAdjacentNodes(int s){
+		
+		int[] row = graph[s];
+		int[] adjNodes = null ;
+		int nodeCount = 0;
+
+		for (int i = 0; i < row.length; i++) {
+			if(row[i]==1)
+				nodeCount++;
+		}
+		
+		adjNodes = new int[nodeCount];
+		nodeCount = 0;
+
+		for (int i = 0; i < row.length; i++) {
+			if(row[i]==1){
+				adjNodes[nodeCount] = i;
+				nodeCount++;
+			}
+		}
+		
+		return adjNodes;
+	}
+	
+	Stack<Integer> stack = new Stack<Integer>();
+	public void findAllPath(GraphMatrix graph,int s,int d,boolean[] visited){
+		
+		stack.add(s);
+
+		if(s==d){
+			printStack(stack);
+		}
+		
+		if(visited[s] != true)
+			visited[s] = true;
+		
+		int[] adjNodes = getAdjacentNodes(s);
+		
+
+		if(adjNodes.length>0){	
+			for (int i = 0; i < adjNodes.length; i++) {
+				if(visited[adjNodes[i]]!=true){
+					
+					findAllPath(graph, adjNodes[i], d,visited);
+				}
+			}
+		}
+		
+		visited[s] = false;
+		stack.remove(stack.size()-1);
+	}
+
+	private void printStack(Stack<Integer> stack) {
+		System.out.println("Print Path ");
+		Object[] array = stack.toArray();
+		for (int i = 0; i < array.length; i++) {
+			System.out.println(array[i]);
+		}
+	}
+}
